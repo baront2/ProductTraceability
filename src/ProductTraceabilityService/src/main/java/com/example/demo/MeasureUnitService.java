@@ -9,21 +9,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class MeasureUnitService {
-    @Autowired
-    private MeasureUnitRepository repository;
-    public List<MeasureUnit> listAllMeasureUnit() {
-        return repository.findAll();
-    }
+	@Autowired
+	private MeasureUnitRepository repository;
 
-    public void addMeasureUnit(MeasureUnit measureUnit) {
-        repository.save(measureUnit);
-    }
+	public List<MeasureUnit> listAllMeasureUnit() {
+		return repository.findAll();
+	}
 
-    public MeasureUnit getMeasureUnit(Long id) {
-        return repository.findById(id).get();
-    }
+	public void addMeasureUnit(MeasureUnit measureUnit) {
+		repository.save(measureUnit);
+	}
 
-    public void deleteMeasureUnit(Long id) {
-        repository.deleteById(id);
-    }
+	public MeasureUnit getMeasureUnit(Long id) {
+		return repository.findById(id).get();
+	}
+
+	public void deleteMeasureUnit(Long id) {
+		repository.deleteById(id);
+	}
 }

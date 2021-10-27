@@ -11,27 +11,28 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "measure_unit")
 public class MeasureUnit {
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long measureUnitId;
 	private String measureUnitName;
 	private String measureUnitSymbol;
-	
-	MeasureUnit(){}
-	
-	MeasureUnit(Long measureUnitId, String measureUnitName, String measureUnitSymbol){
+
+	MeasureUnit() {
+	}
+
+	MeasureUnit(Long measureUnitId, String measureUnitName, String measureUnitSymbol) {
 		this.measureUnitId = measureUnitId;
 		this.measureUnitName = measureUnitName;
 		this.measureUnitSymbol = measureUnitSymbol;
 	}
-	
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getMeasureUnitId() {
-	    return this.measureUnitId;
+		return this.measureUnitId;
 	}
-	
+
 	public String getMeasureUnitName() {
-	    return this.measureUnitName;
+		return this.measureUnitName;
 	}
 
 	public String getMeasureUnitSymbol() {
@@ -39,27 +40,27 @@ public class MeasureUnit {
 	}
 
 	public void setMeasureUnitId(Long id) {
-	    this.measureUnitId = id;
+		this.measureUnitId = id;
 	}
-	
+
 	public void setMeasureUnitName(String name) {
-	    this.measureUnitName = name;
+		this.measureUnitName = name;
 	}
 
 	public void setMeasureUnitSymbol(String symbol) {
-	    this.measureUnitSymbol = symbol;
+		this.measureUnitSymbol = symbol;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
-	      return true;
-	    if (!(o instanceof MeasureUnit))
-	      return false;
-	    MeasureUnit measureUnit = (MeasureUnit) o;
-	    return Objects.equals(this.measureUnitId, measureUnit.measureUnitId) 
-	    	&& Objects.equals(this.measureUnitName, measureUnit.measureUnitName)
-	        && Objects.equals(this.measureUnitSymbol, measureUnit.measureUnitSymbol);
+			return true;
+		if (!(o instanceof MeasureUnit))
+			return false;
+		MeasureUnit measureUnit = (MeasureUnit) o;
+		return Objects.equals(this.measureUnitId, measureUnit.measureUnitId)
+				&& Objects.equals(this.measureUnitName, measureUnit.measureUnitName)
+				&& Objects.equals(this.measureUnitSymbol, measureUnit.measureUnitSymbol);
 	}
 
 	@Override
