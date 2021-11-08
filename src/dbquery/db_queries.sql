@@ -57,5 +57,24 @@ INSERT INTO employee_position(employee_position) VALUES ("QA Analist");
 
 SELECT * FROM employee_position;
 
+#QA Engineer Table
+CREATE TABLE qa_engineer(
+	qa_engineer_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	qa_engineer_name VARCHAR(50) NOT NULL,
+	qa_engineer_hire_date DATE NOT NULL,
+	qa_engineer_email VARCHAR(70) NOT NULL,
+	qa_engineer_phone VARCHAR(20) NOT NULL,
+	qa_engineer_superior_id INT
+);
+
+DROP TABLE qa_engineer;
+
+INSERT INTO qa_engineer(qa_engineer_name, qa_engineer_hire_date, qa_engineer_email, qa_engineer_phone, qa_engineer_superior_id)
+VALUES ("John Doe", '2010-10-12', "john.doe@gmail.com", "0740512346", null);
+INSERT INTO qa_engineer(qa_engineer_name, qa_engineer_hire_date, qa_engineer_email, qa_engineer_phone, qa_engineer_superior_id)
+VALUES ("William Doe", '2012-07-03', "william.doe@gmail.com", "0721599316", 1);
+
+SELECT * FROM qa_engineer;
+
 #Quality Check Table
 
