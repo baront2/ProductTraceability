@@ -77,4 +77,24 @@ VALUES ("William Doe", '2012-07-03', "william.doe@gmail.com", "0721599316", 1);
 SELECT * FROM qa_engineer;
 
 #Quality Check Table
+CREATE TABLE quality_check(
+	quality_check_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	quality_check_start_date DATETIME NOT NULL,
+	quality_check_end_date DATETIME NOT NULL,
+	quality_check_is_acceppted BOOL NOT NULL,
+	quality_check_notes VARCHAR(100) NULL,
+	qa_engineer_id INT NOT NULL
+);
+
+DROP TABLE quality_check;
+
+INSERT INTO quality_check(quality_check_start_date, quality_check_end_date, quality_check_is_acceppted, quality_check_notes, qa_engineer_id)
+VALUES (str_to_date('2021-10-11 12:12:05', '%Y-%m-%d %H:%i:%s'), str_to_date('2021-10-11 12:47:12', '%Y-%m-%d %H:%i:%s'), true, 'iron is in good condition', 1);
+INSERT INTO quality_check(quality_check_start_date, quality_check_end_date, quality_check_is_acceppted, quality_check_notes, qa_engineer_id)
+VALUES (str_to_date('2021-11-02 15:10:05', '%Y-%m-%d %H:%i:%s'), str_to_date('2021-11-02 15:50:12', '%Y-%m-%d %H:%i:%s'), true, 'rubber is in good condition', 2);
+
+SELECT * FROM quality_check;
+
+
+
 
