@@ -30,3 +30,19 @@ VALUES ("DPDgroup", "Str Lunga 36, Albesti, Mures, 5477025", "0722699733", "dpd.
 
 SELECT * FROM delivery_company;
 
+#Courier Table
+CREATE TABLE courier(
+	courier_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	courier_name VARCHAR(50) NOT NULL,
+	courier_phone VARCHAR(20) NOT NULL
+);
+
+DROP TABLE courier;
+
+INSERT INTO courier (courier_name, courier_phone) VALUES ("John Doe", "0740525712");
+INSERT INTO courier (courier_name, courier_phone) VALUES ("William Doe", "0702505912");
+
+SELECT * FROM courier;
+
+
+
