@@ -44,5 +44,18 @@ INSERT INTO courier (courier_name, courier_phone) VALUES ("William Doe", "070250
 
 SELECT * FROM courier;
 
+#Employee Position Table
+CREATE TABLE employee_position(
+	employee_position_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	employee_position VARCHAR(70) NOT NULL
+);
 
+DROP TABLE employee_position;
+
+INSERT INTO employee_position(employee_position) VALUES ("Senior QA Engineer");
+INSERT INTO employee_position(employee_position) VALUES ("QA Analist");
+
+SELECT * FROM employee_position;
+
+#Quality Check Table
 
