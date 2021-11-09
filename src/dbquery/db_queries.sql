@@ -17,6 +17,7 @@ DROP TABLE process_component;
 DROP TABLE machine;
 DROP TABLE machine_operator;
 DROP TABLE operation;
+DROP TABLE deposit;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -395,5 +396,16 @@ JOIN operation o ON o.component_process_id = cp.component_process_id
 JOIN machine m ON m.machine_id = o.machine_id
 JOIN machine_operator mo ON mo.machine_operator_id = o.machine_operator_id;
 
+#Deposit Table
+CREATE TABLE deposit(
+	deposit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	deposit_name VARCHAR(50) NOT NULL,
+	deposit_address VARCHAR(70) NOT NULL,
+	deposit_capacity LONG NOT NULL
+);
 
+INSERT INTO deposit(deposit_name, deposit_address, deposit_capacity)
+VALUE ("Felix Transilvania", "Str Scurta 12, Cluj-Napoca, Cluj, 5377025", 1000000);
+
+SELECT * FROM deposit;
 
