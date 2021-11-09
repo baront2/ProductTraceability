@@ -12,6 +12,8 @@ DROP TABLE product;
 DROP TABLE process_type;
 DROP TABLE component_process;
 DROP TABLE processing;
+DROP TABLE process_raw_material;
+DROP TABLE process_component;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -275,7 +277,42 @@ null);
 
 SELECT * FROM processing;
 
+#Process's Raw Materials
+CREATE TABLE process_raw_material(
+	process_raw_material_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    raw_material_id INT NOT NULL,
+    CONSTRAINT fk_raw_material_id
+    FOREIGN KEY (raw_material_id) 
+        REFERENCES raw_material(raw_material_id),
+	processing_id INT NOT NULL,
+    CONSTRAINT fk_processing_id
+    FOREIGN KEY (processing_id) 
+        REFERENCES processing(processing_id)
+);
 
+INSERT INTO process_raw_material(raw_material_id, processing_id)
+VALUES ((SELECT raw_material_id FROM raw_material WHERE raw_material_name = 'Rubber'), 1)
 
+SELECT * FROM process_raw_material;
 
+#Test query for raw materiall preprocessing
+SELECT pr.processing_id, sc.component_name, rm.raw_material_name, cp.component_process_name, pt.process_type
+FROM processing pr JOIN process_raw_material prw
+ON pr.processing_id = prw.processing_id
+JOIN raw_material rm ON rm.raw_material_id = prw.raw_material_id
+JOIN semi_component sc ON sc.component_id = pr.semi_component_id
+JOIN component_process cp ON cp.component_process_id = pr.component_process_id
+JOIN process_type pt ON pt.process_type_id = cp.process_type_id;
 
+#Process's Components
+CREATE TABLE process_component(
+	process_component_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    component_id INT NOT NULL,
+    CONSTRAINT fk_component_id
+    FOREIGN KEY (component_id) 
+        REFERENCES semi_component(component_id),
+	processing_id INT NOT NULL,
+    CONSTRAINT fkk_processing_id
+    FOREIGN KEY (processing_id) 
+        REFERENCES processing(processing_id)
+);
