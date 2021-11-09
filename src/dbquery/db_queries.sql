@@ -7,8 +7,13 @@ DROP TABLE qa_engineer;
 DROP TABLE quality_check;
 DROP TABLE raw_material;
 DROP TABLE semi_component;
+DROP TABLE product_quality;
+DROP TABLE product;
+DROP TABLE process_type;
+DROP TABLE component_process;
+DROP TABLE processing;
 
-# Measuer Unit table
+#Measuer Unit table
 CREATE TABLE measure_unit(
 	measure_unit_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     measure_unit_name VARCHAR(50) NOT NULL,
@@ -128,7 +133,11 @@ CREATE TABLE raw_material(
 
 INSERT INTO raw_material(raw_material_name, raw_material_origin, raw_material_arrival_date, raw_material_lot_number,
 measure_unit_id, delivery_company_id, courier_id, quality_check_id)
-VALUES ("rubber", "Germany", str_to_date('2021-02-14 13:12:01', '%Y-%m-%d %H:%i:%s'), "nr12345", 1, 1, 1, 1);
+VALUES ("rubber", "Germany", str_to_date('2021-02-14 13:12:01', '%Y-%m-%d %H:%i:%s'), "nr12345", 
+(SELECT measure_unit_id FROM measure_unit WHERE measure_unit_name = 'kilogramm'), 
+(SELECT delivery_company_id FROM delivery_company WHERE delivery_company_name = 'FAN Courier'), 
+(SELECT courier_id FROM courier WHERE courier_name = 'John Doe'), 
+1);
 
 SELECT rm.raw_material_name, rm.raw_material_origin, rm.raw_material_arrival_date, rm.raw_material_lot_number,
 mu.measure_unit_name, dc.delivery_company_name, c.courier_name, qa.qa_engineer_name
@@ -164,10 +173,109 @@ CREATE TABLE semi_component(
 
 INSERT INTO semi_component(component_name, component_arrival_date, component_lot_number, measure_unit_id, delivery_company_id, courier_id,
 quality_check_id)
-VALUES ("Transistor", str_to_date('2021-07-21 17:40:09', '%Y-%m-%d %H:%i:%s'), "nr3321ff", (select measure_unit_id from measure_unit where measure_unit_name = 'piece'),
-(select delivery_company_id from delivery_company where delivery_company_name = 'FAN Courier'),
-(select courier_id from courier where courier_name = 'John Doe'), 1);
+VALUES ("Transistor", str_to_date('2021-07-21 17:40:09', '%Y-%m-%d %H:%i:%s'), "nr3321ff", (SELECT measure_unit_id FROM measure_unit WHERE measure_unit_name = 'piece'),
+(SELECT delivery_company_id FROM delivery_company WHERE delivery_company_name = 'FAN Courier'),
+(SELECT courier_id FROM courier WHERE courier_name = 'John Doe'), 1);
+
+INSERT INTO semi_component(component_name, component_arrival_date, component_lot_number, measure_unit_id, delivery_company_id, courier_id,
+quality_check_id)
+VALUES ("Melted Rubber", null, "nr3322ff", (SELECT measure_unit_id FROM measure_unit WHERE measure_unit_name = 'piece'),
+null, null, null);
 
 SELECT * FROM semi_component;
+
+#Product Quality Table
+CREATE TABLE product_quality(
+	product_quality_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	product_quality_type VARCHAR(50) NOT NULL
+);
+
+INSERT INTO product_quality(product_quality_type) VALUE ("EXCELLENT");
+INSERT INTO product_quality(product_quality_type) VALUE ("GOOD");
+INSERT INTO product_quality(product_quality_type) VALUE ("ACCEPTABLE");
+INSERT INTO product_quality(product_quality_type) VALUE ("BAD");
+
+SELECT * FROM product_quality;
+
+#Product Table
+CREATE TABLE product(
+	product_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	product_name VARCHAR(50) NOT NULL,
+	product_warranty_start DATETIME NOT NULL,
+	product_warranty_end DATETIME NOT NULL,
+	product_quality_id INT NOT NULL,
+	CONSTRAINT fkkk_quality_check_id
+    FOREIGN KEY (product_quality_id) 
+        REFERENCES product_quality(product_quality_id),
+	measure_unit_id INT NOT NULL,
+	CONSTRAINT fk_measure_unit
+    FOREIGN KEY (measure_unit_id) 
+        REFERENCES measure_unit(measure_unit_id)
+);
+
+INSERT INTO product(product_name, product_warranty_start, product_warranty_end, product_quality_id, measure_unit_id)
+VALUES ("Laptop Dell Vostro 3510", str_to_date('2021-07-21 17:40:09', '%Y-%m-%d %H:%i:%s'), str_to_date('2023-07-21 17:40:09', '%Y-%m-%d %H:%i:%s'),
+(SELECT product_quality_id FROM product_quality WHERE product_quality_type = 'EXCELLENT'),
+(SELECT measure_unit_id FROM measure_unit WHERE measure_unit_name = 'piece'));
+
+SELECT * FROM product;
+
+#Process Type Table
+CREATE TABLE process_type(
+	process_type_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	process_type VARCHAR(50) NOT NULL
+);
+
+INSERT INTO process_type(process_type) VALUE ("COMPONENT ASSEMBLY");
+INSERT INTO process_type(process_type) VALUE ("WRAPPING");
+INSERT INTO process_type(process_type) VALUE ("MELTING");
+
+SELECT * FROM process_type;
+
+#Component Process Table
+CREATE TABLE component_process(
+	component_process_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	component_process_name VARCHAR(50) NOT NULL,
+	process_type_id INT,
+	CONSTRAINT fk_process_type_id
+    FOREIGN KEY (process_type_id) 
+        REFERENCES process_type(process_type_id),
+    component_process_parameters VARCHAR(50) NOT NULL
+);
+
+INSERT INTO component_process(component_process_name, process_type_id, component_process_parameters)
+VALUES ("Rubber preprocessing", (SELECT process_type_id FROM process_type WHERE process_type = 'MELTING'), "Degree: 400°C");
+
+SELECT * FROM component_process;
+
+#Processing Table
+CREATE TABLE processing(
+	processing_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	processing_start_date DATETIME NOT NULL,
+	processing_end_date DATETIME NOT NULL,
+	component_process_id INT NOT NULL,
+	CONSTRAINT fk_component_process_id
+    FOREIGN KEY (component_process_id) 
+        REFERENCES component_process(component_process_id),
+	semi_component_id INT,
+    CONSTRAINT fk_semi_component_id
+    FOREIGN KEY (semi_component_id) 
+        REFERENCES semi_component(component_id),
+	product_id INT,
+    CONSTRAINT fk_product_id
+    FOREIGN KEY (product_id) 
+        REFERENCES product(product_id)
+);
+
+INSERT INTO processing(processing_start_date, processing_end_date, component_process_id, semi_component_id, product_id)
+VALUES (str_to_date('2021-08-12 12:31:09', '%Y-%m-%d %H:%i:%s'), str_to_date('2021-08-14 17:40:09', '%Y-%m-%d %H:%i:%s'),
+(SELECT component_process_id FROM component_process WHERE component_process_name = 'Rubber preprocessing'),
+(SELECT component_id FROM semi_component WHERE component_name = 'Melted Rubber'),
+null);
+
+SELECT * FROM processing;
+
+
+
 
 
