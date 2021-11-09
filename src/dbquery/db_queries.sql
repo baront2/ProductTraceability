@@ -16,6 +16,7 @@ DROP TABLE process_raw_material;
 DROP TABLE process_component;
 DROP TABLE machine;
 DROP TABLE machine_operator;
+DROP TABLE operation;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -354,5 +355,45 @@ machine_operator_superior_id)
 VALUES ("William Doe", str_to_date('2012-08-02 09:00:00', '%Y-%m-%d %H:%i:%s'), "wdoe@gmail.com", "07402333311", 1);
 
 SELECT * FROM machine_operator;
+
+#Operation Table
+CREATE TABLE operation(
+	operation_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    operation_start_date DATETIME NOT NULL,
+    operation_end_date DATETIME NOT NULL,
+    operation_description VARCHAR(200),
+    component_process_id INT NOT NULL,
+    CONSTRAINT fkk_component_process_id
+    FOREIGN KEY (component_process_id) 
+        REFERENCES component_process(component_process_id),
+	machine_id INT NOT NULL,
+    CONSTRAINT fk_machine_id
+    FOREIGN KEY (machine_id) 
+        REFERENCES machine(machine_id),
+	machine_operator_id INT NOT NULL,
+    CONSTRAINT fk_machine_operator_id
+    FOREIGN KEY (machine_operator_id) 
+        REFERENCES machine_operator(machine_operator_id)
+);
+
+INSERT INTO operation (operation_start_date, operation_end_date, operation_description, component_process_id, machine_id, machine_operator_id)
+VALUE (str_to_date('2021-08-02 09:00:00', '%Y-%m-%d %H:%i:%s'), str_to_date('2021-08-02 12:00:00', '%Y-%m-%d %H:%i:%s'),
+"Melting rubber was finished without any problem", 1, 1, 1)
+
+SELECT * FROM operation;
+
+#Test query for raw materiall preprocessing with operation also
+SELECT pr.processing_id, sc.component_name, rm.raw_material_name, cp.component_process_name, 
+pt.process_type, m.machine_name, mo.machine_operator_name, o.operation_description
+FROM processing pr JOIN process_raw_material prw
+ON pr.processing_id = prw.processing_id
+JOIN raw_material rm ON rm.raw_material_id = prw.raw_material_id
+JOIN semi_component sc ON sc.component_id = pr.semi_component_id
+JOIN component_process cp ON cp.component_process_id = pr.component_process_id
+JOIN process_type pt ON pt.process_type_id = cp.process_type_id
+JOIN operation o ON o.component_process_id = cp.component_process_id
+JOIN machine m ON m.machine_id = o.machine_id
+JOIN machine_operator mo ON mo.machine_operator_id = o.machine_operator_id;
+
 
 
