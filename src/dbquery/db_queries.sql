@@ -15,6 +15,7 @@ DROP TABLE processing;
 DROP TABLE process_raw_material;
 DROP TABLE process_component;
 DROP TABLE machine;
+DROP TABLE machine_operator;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -333,4 +334,25 @@ VALUE ("Gold Melting Furnance", 10000, str_to_date('2020-01-23 10:00:00', '%Y-%m
 str_to_date('2005-04-10 10:00:00', '%Y-%m-%d %H:%i:%s'), str_to_date('2009-04-10 10:00:00', '%Y-%m-%d %H:%i:%s'));
 
 SELECT * FROM machine;
+
+#Machine Operator Table
+CREATE TABLE machine_operator(
+	machine_operator_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	machine_operator_name VARCHAR(50) NOT NULL,
+	machine_operator_hire_date DATETIME NOT NULL,
+	machine_operator_email  VARCHAR(50) NOT NULL,
+	machine_operator_phone  VARCHAR(20) NOT NULL,
+	machine_operator_superior_id  INT
+);
+
+INSERT INTO machine_operator(machine_operator_name, machine_operator_hire_date, machine_operator_email, machine_operator_phone,
+machine_operator_superior_id)
+VALUES ("John Doe", str_to_date('2010-07-12 09:00:00', '%Y-%m-%d %H:%i:%s'), "jdoe@gmail.com", "07402111111", null);
+
+INSERT INTO machine_operator(machine_operator_name, machine_operator_hire_date, machine_operator_email, machine_operator_phone,
+machine_operator_superior_id)
+VALUES ("William Doe", str_to_date('2012-08-02 09:00:00', '%Y-%m-%d %H:%i:%s'), "wdoe@gmail.com", "07402333311", 1);
+
+SELECT * FROM machine_operator;
+
 
