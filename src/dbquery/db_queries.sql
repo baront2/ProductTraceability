@@ -18,6 +18,7 @@ DROP TABLE machine;
 DROP TABLE machine_operator;
 DROP TABLE operation;
 DROP TABLE deposit;
+DROP TABLE deposition;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -408,4 +409,31 @@ INSERT INTO deposit(deposit_name, deposit_address, deposit_capacity)
 VALUE ("Felix Transilvania", "Str Scurta 12, Cluj-Napoca, Cluj, 5377025", 1000000);
 
 SELECT * FROM deposit;
+
+#Deposition Table
+CREATE TABLE deposition(
+	deposition_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	deposition_date DATETIME NOT NULL,
+	deposit_id INT NOT NULL,
+    CONSTRAINT fk_deposit_id
+    FOREIGN KEY (deposit_id) 
+        REFERENCES deposit(deposit_id),
+	product_id INT NOT NULL,
+    CONSTRAINT fkk_product_id
+    FOREIGN KEY (product_id) 
+        REFERENCES product(product_id),
+	product_quantity LONG NOT NULL
+);
+
+INSERT INTO deposition(deposition_date, deposit_id, product_id, product_quantity)
+VALUES (str_to_date('2021-11-06 13:00:00', '%Y-%m-%d %H:%i:%s'), 1, 1, 1);
+
+SELECT * FROM deposition;
+
+#Product deposit details
+SELECT dp.deposition_date, d.deposit_name, p.product_name
+FROM deposition dp JOIN deposit d
+ON dp.deposit_id = d.deposit_id
+JOIN product p
+ON p.product_id = dp.product_id;
 
