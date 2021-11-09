@@ -14,6 +14,7 @@ DROP TABLE component_process;
 DROP TABLE processing;
 DROP TABLE process_raw_material;
 DROP TABLE process_component;
+DROP TABLE machine;
 
 #Measuer Unit table
 CREATE TABLE measure_unit(
@@ -316,3 +317,20 @@ CREATE TABLE process_component(
     FOREIGN KEY (processing_id) 
         REFERENCES processing(processing_id)
 );
+
+#Machine Table
+CREATE TABLE machine(
+	machine_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	machine_name VARCHAR(50) NOT NULL,
+	machine_capacity LONG NOT NULL,
+	machine_last_revisioned DATETIME NOT NULL,
+	machine_warranty_start DATETIME NOT NULL,
+	machine_warranty_end DATETIME NOT NULL
+);
+
+INSERT INTO machine(machine_name, machine_capacity, machine_last_revisioned, machine_warranty_start, machine_warranty_end)
+VALUE ("Gold Melting Furnance", 10000, str_to_date('2020-01-23 10:00:00', '%Y-%m-%d %H:%i:%s'),
+str_to_date('2005-04-10 10:00:00', '%Y-%m-%d %H:%i:%s'), str_to_date('2009-04-10 10:00:00', '%Y-%m-%d %H:%i:%s'));
+
+SELECT * FROM machine;
+
